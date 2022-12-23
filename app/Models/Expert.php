@@ -17,7 +17,7 @@ class Expert extends Model
         'phone',
         'address',
         'details',
-       // 'rating',
+        'rating',
         'category_id',
         'user_id',
     ];

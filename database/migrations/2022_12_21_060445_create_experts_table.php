@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('phone');
             $table->string('address');
             $table->text('details');
-           // $table->double('rating')->default(5.0);
+            $table->double('rating')->default(2.5);
             $table->unsignedbigInteger('category_id'); 
             $table->foreign('user_id')->references('id')->on('users')->OnDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->OnDelete('cascade');
