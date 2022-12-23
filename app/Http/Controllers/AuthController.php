@@ -16,6 +16,7 @@ use Illuminate\Validation\Rules\Unique;
 class AuthController extends Controller
 {
     use HttpResponses;
+    
 
     public function login(Request $request){
 
@@ -63,7 +64,7 @@ class AuthController extends Controller
     
         ];
 
-        $validator = Validator::make(request()->only('name','email','password','is_expert'), $rules);
+        $validator = Validator::make($request->only('name','email','password','is_expert'), $rules);
         
 
 
@@ -153,27 +154,25 @@ class AuthController extends Controller
     
 
     public function ExpertRegister(Request $request){
-        // $rules = [
-        //     'name' => ['required', 'string', 'max:255'],
-        //     'email' => ['required', 'string', 'email', 'max:255'],
-        //     'password' => ['required', 'string','min:8'],
-        //     'is_expert'=>['required','integer','max:1'],
-        //     'price'=> ['required', 'double'],
-        //     'image_url'=>['nullable'],
-        //     'phone'=>['required', 'string','min:9', 'max:10'],
-        //     'address'=>['required', 'string'],
-        //     'details'=>['required'],
-        //     'category_id'=>['required']
+        $rules = [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'password' => ['required', 'string','min:8'],
+            'is_expert'=>['required','integer','max:1'],
+            'price'=> ['required'],
+            'image_url'=>['nullable'],
+            'phone'=>['required', 'string','min:9', 'max:10'],
+            'address'=>['required', 'string'],
+            'details'=>['required'],
+            'category_id'=>['required']
     
-        // ];
+        ];
+        
 
-        $validator = Validator::make(request()->all(), [
-            'name'=>['required','string','max:255'],
-            'email'=>['required','string','email','max:255'],
-            'password'=>['required','string','min:8'],
-            
 
-        ]);
+       $validator = Validator::make($request->all(), $rules);
+
+
 
         if($validator->fails()) {
             return response()->json([
@@ -190,8 +189,8 @@ class AuthController extends Controller
         
         ]);
 
-             $expert = Expert::create([
-                    //'user_id'=>$request->id,
+        $expert = Expert::create([
+                    'user_id'=>$user->id,
                     'price' => $request->price,
                     'image_url' => $request->image_url,
                     'phone' => $request->phone,

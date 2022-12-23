@@ -22,8 +22,10 @@ return new class extends Migration
             $table->string('address');
             $table->text('details');
            // $table->double('rating')->default(5.0);
+            $table->unsignedbigInteger('category_id'); 
             $table->foreign('user_id')->references('id')->on('users')->OnDelete('cascade');
-            $table->bigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('categories')->OnDelete('cascade');
+            
             $table->timestamps();
         });
     }
