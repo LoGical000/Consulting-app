@@ -39,6 +39,9 @@ Route::post('/make_appointment',[AppointmentController::class,'makeAppointment']
 Route::get('get_appointment/{expert_id}',[AppointmentController::class,'getAppointment']);
 Route::get('get_username/{user_id}',[ExpertController::class,'getusername']);
 
+Route::get('search_byname/{name}',[ExpertController::class,'searchByname']);
+Route::get('search_bycategory/{name}',[CategoryController::class,'searchBycategory']);
+
 
 
 

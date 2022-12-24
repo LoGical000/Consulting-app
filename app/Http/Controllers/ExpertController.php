@@ -116,4 +116,43 @@ class ExpertController extends Controller
         ], 200);
 
     }
+
+    public function searchByname(Request $request ){
+
+        $user = DB::table('users')
+              ->where('name','like','%'.$request->name.'%')
+              ->where('is_expert','=',1)
+              ->first();
+        
+        if(!$user){
+            return response()->json([
+                'success' => '0',
+                'massage' => "No result found"
+            ], 404);
+        }
+
+        $expert = DB::table('experts')
+                ->where('user_id','=',$user->id)
+                ->first();
+
+                $data['name']=$user->name;
+                $data['id']=$expert->id;  
+                $data['user_id']=$expert->user_id;   
+                $data['image_url']=$expert->image_url; 
+                $data['phone']=$expert->phone;    
+                $data['address']=$expert->address; 
+                $data['details']=$expert->details;
+                $data['rating']=$expert->rating;
+                $data['category_id']=$expert->category_id;        
+
+        
+            return response()->json([
+                'success' => '1',
+                'data'=>$data
+            ], 200);
+        
+    
+        
+
+    }
 }
