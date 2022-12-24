@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Expert;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ExpertController extends Controller
 {
@@ -20,7 +21,7 @@ class ExpertController extends Controller
         $expertQuery->where('category_id',$request->category_id);
         $experts = $expertQuery->get();
 
-        $users_id=$expertQuery->get('user_id');
+        $users_id=$experts->get('user_id');
         
 
         // foreach($users_id as $id){
@@ -33,7 +34,6 @@ class ExpertController extends Controller
 
             return response()->json([
                 'success' => '1',
-                'message' => 'Indexed successfuly!',
                 'data'=> $experts
             ], 200);
         
@@ -51,7 +51,20 @@ class ExpertController extends Controller
 
         return response()->json([
             'success' => '1',
-            'date'=> $user
+            'data'=> $user
+        ], 200);
+
+
+    }
+
+    public function getusername(Request $request){
+        $userQuery = User::query();
+        $userQuery->where('id',$request->user_id);
+        $user=$userQuery->get('name');
+
+        return response()->json([
+            'success' => '1',
+            'data'=> $user
         ], 200);
 
 
@@ -60,13 +73,30 @@ class ExpertController extends Controller
 
     public function getExpertDetails(Request $request)
     {
-        $expertQuery = Expert::query();
-        $expertQuery->where('id',$request->expert_id);
-        $experts = $expertQuery->get();
+
+        $expert = DB::table('experts')
+                ->where('id','=',$request->expert_id)
+                ->first();
+        $user_id = $expert->user_id;
+
+        $user = DB::table('users')
+              ->where('id','=',$user_id)
+              ->first();
+
+        $data['name']=$user->name;
+        $data['id']=$expert->id;  
+        $data['user_id']=$expert->user_id;   
+        $data['image_url']=$expert->image_url; 
+        $data['phone']=$expert->phone;    
+        $data['address']=$expert->address; 
+        $data['details']=$expert->details;
+        $data['rating']=$expert->rating;
+        $data['category_id']=$expert->category_id;
+
 
         return response()->json([
             'success' => '1',
-            'date'=> $experts
+            'data'=> $data
         ], 200);
         
     }
@@ -76,33 +106,14 @@ class ExpertController extends Controller
         $expertQuery = Expert::query();
         $experts = $expertQuery->get();
 
+        // $users=DB::table('users')->where('is_expert','=',1);
+        // $input[]=$users->name;
+
         return response()->json([
             'success' => '1',
-            'date'=> $experts
+            'data'=> $experts,
+            // 'names'=>$input
         ], 200);
 
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Expert  $expert
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Expert $expert)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Expert  $expert
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Expert $expert)
-    {
-        //
     }
 }
