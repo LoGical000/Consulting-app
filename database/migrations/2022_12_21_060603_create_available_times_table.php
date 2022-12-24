@@ -16,13 +16,13 @@ return new class extends Migration
         Schema::create('available_times', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('sunday');
-            $table->string('monday');
-            $table->string('tuesday');
-            $table->string('wednesday');
-            $table->string('thursday');
-            $table->string('friday');
-            $table->string('saturday');
+            $table->integer('sunday');
+            $table->integer('monday');
+            $table->integer('tuesday');
+            $table->integer('wednesday');
+            $table->integer('thursday');
+            $table->integer('friday');
+            $table->integer('saturday');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');     
 

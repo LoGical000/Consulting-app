@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Available_time;
 use App\Models\Expert;
 use App\Models\User;
 use App\Traits\HttpResponses;
@@ -84,67 +85,6 @@ class AuthController extends Controller
         
         ]);
 
-
-        $is_expert=$request->is_expert;
-        $test=$request->id;
-
-         $input['price'] = $request->price;
-         $input['image_url'] = $request->image_url;
-         $input['phone'] = $request->phone;
-         $input['address'] = $request->address;
-         $input['details'] = $request->details;
-         $input['category_id'] = $request->category_id;
-
-         $expert_rules = [
-            'price'=> ['required', 'double',],
-            'image_url'=>['nullable'],
-            'phone'=>['required', 'string','min:9', 'max:10'],
-            'address'=>['required', 'string'],
-            'details'=>['required',],
-            'category_id'=>['required',]
-            
-        ];
-
-            // if($is_expert==1){
-            // //     $request->validate([
-            // //         'price'=> ['required', 'double',],
-            // // 'image_url'=>['text'],
-            // // 'phone'=>['required', 'string','min:9', 'max:10'],
-            // // 'address'=>['required', 'string'],
-            // // 'details'=>['required', 'text'],
-            // // 'category_id'=>['required',]
-            // //     ]);
-
-            //    // $validator2 = Validator::make(request()->only('price','image_url','phone','address','details','category_id'), $expert_rules);
-
-            //     // if($validator2->fails()) {
-            //     //     return response()->json([
-            //     //         'success' => '0',
-            //     //         'message' => $validator->errors()->all()
-            //     //     ], 422);
-            //     // }
-
-            //     $expert = Expert::create([
-            //         'user_id'=>$request->id,
-            //         'price' => $request->price,
-            //         'image_url' => $request->image_url,
-            //         'phone' => $request->phone,
-            //         'address' => $request->address,
-            //         'details' => $request->details,
-            //         'category_id' => $request->category_id,
-
-
-            //     ]);
-
-            //     return $this->success([
-            //         'expert'=>$expert,
-            //         'token'=>$expert->createToken('API Token of'.$expert->name)->plainTextToken
-            
-            //        ]);
-
-
-            // }
-
        return $this->success([
         'user'=>$user,
         'token'=>$user->createToken('API Token of'.$user->name)->plainTextToken
@@ -164,13 +104,16 @@ class AuthController extends Controller
             'phone'=>['required', 'string','min:9', 'max:10'],
             'address'=>['required', 'string'],
             'details'=>['required'],
-            'category_id'=>['required']
-    
+            'category_id'=>['required'],
+            'saturday'=>['required','integer','min:0','max:1'],
+            'sunday'=>['required','integer','min:0','max:1'],
+            'monday'=>['required','integer','min:0','max:1'],
+            'tuesday'=>['required','integer','min:0','max:1'],
+            'wednesday'=>['required','integer','min:0','max:1'],
+            'thursday'=>['required','integer','min:0','max:1'],
+            'friday'=>['required','integer','min:0','max:1'],        
         ];
-        
-
-
-       $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
 
 
@@ -180,6 +123,21 @@ class AuthController extends Controller
                 'message' => $validator->errors()->all()
             ], 422);
         }
+
+    // $request->validate([
+    //     'name' => 'required'|'string'|'max:255',
+    //     'email' => 'required'|'string'|'email'|'max:255',
+    //     'password' => 'required'|'string'|'min:8',
+    //     'is_expert'=>'required'|'integer'|'max:1',
+    //     'price'=> 'required',
+    //     'image_url'=>'nullable',
+    //     'phone'=>'required'|'string'|'min:9'|'max:10',
+    //     'address'=>'required'|'string',
+    //     'details'=>'required',
+    //     'category_id'=>'required',
+    //     'saturday'=>'required'|'integer,'min:0','max:1'
+         
+    // ]);
 
         $user = User::create([
             'name' => $request->name,
@@ -199,10 +157,26 @@ class AuthController extends Controller
                     'category_id' => $request->category_id,
                 ]);
 
+        $available_times = Available_time::create([
+            'user_id'=>$user->id,
+            'saturday'=>$request->saturday,
+            'sunday'=>$request->sunday,
+            'monday'=>$request->monday,
+            'tuesday'=>$request->tuesday,
+            'wednesday'=>$request->wednesday,
+            'thursday'=>$request->thursday,
+            'friday'=>$request->friday,
+
+
+
+        ]
+        );        
+
 
                 return $this->success([
                     'user'=>$user,
                     'expert'=>$expert,
+                    'available_times'=>$available_times,
                     'token'=>$user->createToken('API Token of'.$user->name)->plainTextToken
             
                    ]);
