@@ -61,11 +61,12 @@ class AuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string','min:8'],
+            'password_confirmation' => ['required', 'string','same:password'],
             'is_expert'=>['required','integer','max:1']
     
         ];
 
-        $validator = Validator::make($request->only('name','email','password','is_expert'), $rules);
+        $validator = Validator::make($request->only('name','email','password','password_confirmation','is_expert'), $rules);
         
 
 
@@ -98,9 +99,10 @@ class AuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string','min:8'],
+            'password_confirmation' => ['required', 'string','same:password'],
             'is_expert'=>['required','integer','max:1'],
             'price'=> ['required'],
-            'image_url'=>['nullable'],
+            //'image_url'=>['nullable'],
             'phone'=>['required', 'string','min:9', 'max:10'],
             'address'=>['required', 'string'],
             'details'=>['required'],
@@ -124,20 +126,16 @@ class AuthController extends Controller
             ], 422);
         }
 
-    // $request->validate([
-    //     'name' => 'required'|'string'|'max:255',
-    //     'email' => 'required'|'string'|'email'|'max:255',
-    //     'password' => 'required'|'string'|'min:8',
-    //     'is_expert'=>'required'|'integer'|'max:1',
-    //     'price'=> 'required',
-    //     'image_url'=>'nullable',
-    //     'phone'=>'required'|'string'|'min:9'|'max:10',
-    //     'address'=>'required'|'string',
-    //     'details'=>'required',
-    //     'category_id'=>'required',
-    //     'saturday'=>'required'|'integer,'min:0','max:1'
-         
-    // ]);
+        $image_name='default.jpg';
+        $path = 'public/images';
+
+        if ($request->hasFile('image')) { 
+            $image_name = time(). '-' . $request->name . '.' . $request->image->extension();
+            $request->image->move($path,$image_name);
+        }
+        
+
+
 
         $user = User::create([
             'name' => $request->name,
@@ -150,7 +148,7 @@ class AuthController extends Controller
         $expert = Expert::create([
                     'user_id'=>$user->id,
                     'price' => $request->price,
-                    'image_url' => $request->image_url,
+                    'image_url' => $image_name,
                     'phone' => $request->phone,
                     'address' => $request->address,
                     'details' => $request->details,
@@ -166,9 +164,6 @@ class AuthController extends Controller
             'wednesday'=>$request->wednesday,
             'thursday'=>$request->thursday,
             'friday'=>$request->friday,
-
-
-
         ]
         );        
 
@@ -189,6 +184,10 @@ class AuthController extends Controller
 
     public function logout(){
 
-        return response()->json('this is logout');
+        Auth::user()->currentAccessToken()->delete();
+        return $this->success([
+         'messages'=>'successfully logged out'
+
+        ]);
     }
 }

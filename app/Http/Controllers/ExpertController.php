@@ -120,7 +120,7 @@ class ExpertController extends Controller
     public function searchByname(Request $request ){
 
         $user = DB::table('users')
-              ->where('name','like','%'.$request->name.'%')
+              ->where('name','like','%'.$request->name)
               ->where('is_expert','=',1)
               ->first();
         

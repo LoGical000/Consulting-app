@@ -99,7 +99,7 @@ class AppointmentController extends Controller
 
         return response()->json([
             'success' => '1',
-            'date'=> $times
+            'data'=> $times
         ], 200);
         
     }

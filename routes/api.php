@@ -27,20 +27,7 @@ Route::post('/expert_register',[AuthController::class,'ExpertRegister']);
 Route::post('/create_category',[CategoryController::class,'createCategory']);
 
 
-Route::get('get_experts/{category_id}',[ExpertController::class,'getexperts']);
-Route::get('get_users/{user_id}',[ExpertController::class,'getuser']);
-Route::get('get_expert_datails/{expert_id}',[ExpertController::class,'getExpertDetails']);
-Route::get('get_all_experts',[ExpertController::class,'getAllExperts']);
 
-Route::get('get_available_times/{user_id}',[Available_timeController::class,'getAvailableTimes']);
-
-Route::post('/make_appointment',[AppointmentController::class,'makeAppointment']);
-
-Route::get('get_appointment/{expert_id}',[AppointmentController::class,'getAppointment']);
-Route::get('get_username/{user_id}',[ExpertController::class,'getusername']);
-
-Route::get('search_byname/{name}',[ExpertController::class,'searchByname']);
-Route::get('search_bycategory/{name}',[CategoryController::class,'searchBycategory']);
 
 
 
@@ -48,8 +35,22 @@ Route::get('search_bycategory/{name}',[CategoryController::class,'searchBycatego
 //protected routes
 
 
-Route::group(['middleware' => ['auth:sanctm']],function(){
+Route::group(['middleware' => ['auth:sanctum']],function(){
 
     Route::post('/logout',[AuthController::class,'logout']);
+    Route::get('get_experts/{category_id}',[ExpertController::class,'getexperts']);
+    Route::get('get_users/{user_id}',[ExpertController::class,'getuser']);
+    Route::get('get_expert_datails/{expert_id}',[ExpertController::class,'getExpertDetails']);
+    Route::get('get_all_experts',[ExpertController::class,'getAllExperts']);
+
+    Route::get('get_available_times/{user_id}',[Available_timeController::class,'getAvailableTimes']);
+
+    Route::post('/make_appointment',[AppointmentController::class,'makeAppointment']);
+
+    Route::get('get_appointment/{expert_id}',[AppointmentController::class,'getAppointment']);
+    Route::get('get_username/{user_id}',[ExpertController::class,'getusername']);
+
+    Route::get('search_byname/{name}',[ExpertController::class,'searchByname']);
+    Route::get('search_bycategory/{name}',[CategoryController::class,'searchBycategory']);
 
 });

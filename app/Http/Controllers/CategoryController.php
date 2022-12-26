@@ -44,7 +44,7 @@ class CategoryController extends Controller
 
 
         $category = DB::table('categories')
-              ->where('name','like','%'.$request->name.'%')
+              ->where('name','like','%'.$request->name)
               ->first();
 
               
