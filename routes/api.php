@@ -13,6 +13,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/test-online', function () {
+    dd('i am online ^_^');
+});
 
 
 
