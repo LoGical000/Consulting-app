@@ -127,7 +127,7 @@ class AuthController extends Controller
         }
 
         $image_name='default.jpg';
-        $path = 'public/images';
+        $path = 'images';
 
         if ($request->hasFile('image')) { 
             $image_name = time(). '-' . $request->name . '.' . $request->image->extension();
