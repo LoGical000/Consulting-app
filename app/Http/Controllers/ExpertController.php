@@ -19,6 +19,7 @@ class ExpertController extends Controller
 
         $expertQuery = Expert::query();
         $expertQuery->where('category_id',$request->category_id);
+        $expertQuery->join('users','users.id','experts.user_id');
         $experts = $expertQuery->get();
 
         $users_id=$experts->get('user_id');
@@ -104,6 +105,7 @@ class ExpertController extends Controller
     public function getAllExperts()
     {
         $expertQuery = Expert::query();
+        $expertQuery->join('users','users.id','experts.user_id');
         $experts = $expertQuery->get();
 
         // $users=DB::table('users')->where('is_expert','=',1);
