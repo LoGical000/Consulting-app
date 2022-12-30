@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use App\Models\Expert;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
@@ -21,8 +22,9 @@ class AppointmentController extends Controller
 
     public function makeAppointment(Request $request)
     {
+        
         $rules = [
-            'client_id' => ['required', 'integer'],
+            //'client_id' => ['required', 'integer'],
             'expert_id' => ['required', 'integer'],
             'day' => ['required', 'integer'],       
         ];
@@ -37,14 +39,17 @@ class AppointmentController extends Controller
             ], 422);
         }
 
+        $client_id=Auth::id();
+
         $query = DB::table('experts')
                   ->where('user_id','=',$request->expert_id)
                   ->first();
         $expert_price=$query->price;          
 
         
+
         $client = DB::table('users')
-                  ->where('id','=',$request->client_id)
+                  ->where('id','=',$client_id)
                   ->first();
         $client_bank=$client->bank;
 
@@ -55,8 +60,7 @@ class AppointmentController extends Controller
 
 
 
-
-        User::query()->find($request->client_id)->update([
+        User::query()->find($client_id)->update([
             'bank'=>$client_bank-$expert_price
             ]);
 
@@ -64,12 +68,11 @@ class AppointmentController extends Controller
             'bank'=>$expert_bank+$expert_price
             ]);    
       
-
         $appointment = Appointment::create([
-        'client_id'=>$request->client_id,
-        'expert_id'=>$request->expert_id,
-        'day'=>$request->day
-        ]);
+            'client_id'=>$client_id,
+            'expert_id'=>$request->expert_id,
+            'day'=>$request->day
+            ]);
 
         return response()->json([
             'success' => '1',
