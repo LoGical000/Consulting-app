@@ -14,30 +14,15 @@ use Illuminate\Support\Facades\DB;
 
 class AppointmentController extends Controller
 {
-   
-    public function index()
-    {
-        //
-    }
+
 
     public function makeAppointment(Request $request)
     {
         
-        $rules = [
-            //'client_id' => ['required', 'integer'],
-            'expert_id' => ['required', 'integer'],
-            'day' => ['required', 'integer'],       
-        ];
-        $validator = Validator::make($request->all(), $rules);
-
-
-
-        if($validator->fails()) {
-            return response()->json([
-                'success' => '0',
-                'message' => $validator->errors()->all()
-            ], 422);
-        }
+        $request->validate([
+            'expert_id' => 'required|integer',
+            'day' => 'required|integer|min:1|max:7',
+        ]);
 
         $client_id=Auth::id();
 
@@ -52,6 +37,96 @@ class AppointmentController extends Controller
                   ->where('id','=',$client_id)
                   ->first();
         $client_bank=$client->bank;
+
+        if($client_bank<$expert_price){
+            return response()->json([
+             'message'=>'You Dont have enough money'
+            ]);
+        }
+
+        // if($request->day==1){
+        //     $day = DB::table('available_times')
+        //           ->where('id','=',$request->expert_id)
+        //           ->first();
+        // $appointment_day=$day->sunday;
+        //  if($appointment_day==0){
+        //     return response()->json([
+        //         'message'=>'The expert is not available on this day , please try a different day'
+        //     ]);
+        //  }
+        // }
+
+        // if($request->day==2){
+        //     $day = DB::table('available_times')
+        //           ->where('id','=',$request->expert_id)
+        //           ->first();
+        // $appointment_day=$day->monday;
+        //  if($appointment_day==0){
+        //     return response()->json([
+        //         'message'=>'The expert is not available on this day , please try a different day'
+        //     ]);
+        //  }
+        // }
+
+        // if($request->day==3){
+        //     $day = DB::table('available_times')
+        //           ->where('id','=',$request->expert_id)
+        //           ->first();
+        // $appointment_day=$day->tuesday;
+        //  if($appointment_day==0){
+        //     return response()->json([
+        //         'message'=>'The expert is not available on this day , please try a different day'
+        //     ]);
+        //  }
+        // }
+
+        // if($request->day==4){
+        //     $day = DB::table('available_times')
+        //           ->where('id','=',$request->expert_id)
+        //           ->first();
+        // $appointment_day=$day->wednesday;
+        //  if($appointment_day==0){
+        //     return response()->json([
+        //         'message'=>'The expert is not available on this day , please try a different day'
+        //     ]);
+        //  }
+        // }
+
+        // if($request->day==5){
+        //     $day = DB::table('available_times')
+        //           ->where('id','=',$request->expert_id)
+        //           ->first();
+        // $appointment_day=$day->thursday;
+        //  if($appointment_day==0){
+        //     return response()->json([
+        //         'message'=>'The expert is not available on this day , please try a different day'
+        //     ]);
+        //  }
+        // }
+
+        // if($request->day==6){
+        //     $day = DB::table('available_times')
+        //           ->where('id','=',$request->expert_id)
+        //           ->first();
+        // $appointment_day=$day->friday;
+        //  if($appointment_day==0){
+        //     return response()->json([
+        //         'message'=>'The expert is not available on this day , please try a different day'
+        //     ]);
+        //  }
+        // }
+
+        // if($request->day==7){
+        //     $day = DB::table('available_times')
+        //           ->where('id','=',$request->expert_id)
+        //           ->first();
+        // $appointment_day=$day->saturday;
+        //  if($appointment_day==0){
+        //     return response()->json([
+        //         'message'=>'The expert is not available on this day , please try a different day'
+        //     ]);
+        //  }
+        // }
 
         $expert = DB::table('users')
                   ->where('id','=',$request->expert_id)

@@ -11,7 +11,7 @@ class Available_timeController extends Controller
     public function getAvailableTimes(Request $request)
     {
         $timesQuery = Available_time::query();
-        $timesQuery->where('id',$request->user_id);
+        $timesQuery->where('user_id',$request->user_id);
         $times = $timesQuery->get();
 
         return response()->json([
