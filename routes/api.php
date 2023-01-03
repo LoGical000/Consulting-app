@@ -28,7 +28,7 @@ Route::post('/expert_register',[AuthController::class,'ExpertRegister']);
 
 
 Route::post('/create_category',[CategoryController::class,'createCategory']);
-
+Route::get('/get_categories',[CategoryController::class,'getCategories']);
 
 
 

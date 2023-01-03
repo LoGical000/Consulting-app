@@ -11,9 +11,16 @@ use Illuminate\Support\Facades\DB;
 class CategoryController extends Controller
 {
     
-    public function index()
+    public function getCategories()
     {
-        
+        $cateogryQuery = Category::query();
+        $categories=$cateogryQuery->get();
+
+        return response()->json([
+            'success' => '1',
+            'data'=> $categories,
+            // 'names'=>$input
+        ], 200);
     }
 
   
