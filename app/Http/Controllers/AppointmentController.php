@@ -162,8 +162,6 @@ class AppointmentController extends Controller
 
     public function getAppointment(Request $request)
     {
-
-
          $request->validate([
          'expert_id'=> 'required'|'integer'   
     ]);
